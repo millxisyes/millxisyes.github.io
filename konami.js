@@ -40,6 +40,6 @@ document.addEventListener("keydown", function(e) {
 });
 
 function activateCheats() {
-  alert("created with 💖 by slash - backslashg.com");
+  alert("created with 💖 by slash - backslashg.com - it wasn't, i enslaved him - millx");
 }
 
