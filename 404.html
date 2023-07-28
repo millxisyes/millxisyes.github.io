@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>not found - millx</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta charset="utf-8">
+	<style>
+		@font-face {
+			font-family: 'C';
+			font-weight: 500;
+			src: url('/assets/fonts/cr.ttf');
+		}
+		@font-face {
+			font-family: 'C';
+			font-weight: 900;
+			src: url('/assets/fonts/cb.ttf');
+		}
+		body {
+			background: #000;
+			font-family: 'C';
+		}
+
+		#notfound {
+			margin-top: calc(50vh - 75px - 6em);
+			text-align: center;
+		}
+
+		#notfound h1 {
+			font-size: 4em;
+			margin: 0;
+			color: #832535;
+		}
+		#notfound p {
+			font-size: 1.5em;
+			margin: 0;
+			color: #4B4B4B;
+		}
+		#notfound p a {
+			color: #999;
+			text-decoration: none;
+			transition: 0.3s color;
+		}
+		#notfound p a:hover {
+			color: #FFF;
+		}
+		#notfound h6 {
+			font-size: 1.25em;
+			margin: 0;
+			color: #333;
+			font-weight: 500;
+		}
+	</style>
+</head>
+<body>
+	<div id="notfound">
+		<img src="/assets/err.png" />
+		<h1>NOT FOUND</h1>
+		<p>I couldn't find what you were looking for.<br>I can't point you in the right direction, but I can at least bring you back <a href="/">home</a>.</p>
+		<h6>if you do need directions, maybe ask the developer?</h6>
+	</div>
+</body>
+</html>
