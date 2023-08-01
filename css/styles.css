@@ -11,7 +11,11 @@ body {
     background-color: #0B090A;
     margin: 15px;
 }
-
+.FuckYouMillxIHateCss {
+    color:#e5383b;
+    display: flex;
+    align-items: center;
+}
 #nav {
     background-color: #000000;
     font-size: 20px;
@@ -73,7 +77,11 @@ a:hover,
 a:active {
     color: #ffffff;
 }
-
+u.dotted{
+    border-bottom: 1px dashed #999;
+    text-decoration: none; 
+  }
+  
 a:hover {
     filter: brightness(200%);  
 }
@@ -134,9 +142,10 @@ h6 {
     text-align: center;
     padding-bottom: 20px;
 }
-
-h2 {
+.special {
     color: #B1A7A6;
+}
+h2 {
     padding-bottom: 20px;
     text-align: center;
     font-size: 30px;
@@ -273,6 +282,10 @@ h4 sub {
     font-weight: 400;
     font-family: Lexend Mega;
     letter-spacing: -1px;
+}
+
+img:hover {
+    cursor: pointer;
 }
 
 /* Font */
