@@ -1,3 +1,4 @@
+if ur reading this pls add something to the website, it looks empty af rn, just do a pull request and ill go over what you made and see if its good for the website
 (98% of this website was made by BackslashG after I enslaved him)
 PLEASE HELP THE VOICES ARE GETTING SO LOUD AAAAAAAAAAAAAAAAAAAAAAAAAAAA
 PLEASE HELP THE VOICES ARE GETTING SO LOUD AAAAAAAAAAAAAAAAAAAAAAAAAAAA
