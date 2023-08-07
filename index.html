@@ -11,7 +11,16 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: calc(100vh - 200px); /* Subtract height of top section */
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+    .introduction {
+      padding: 20px;
     }
   </style>
 </head>
