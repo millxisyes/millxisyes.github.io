@@ -296,3 +296,10 @@ img:hover {
     font-weight: 600;
 }
 
+.discord-embed {
+    width: 410px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 85px;
+}
