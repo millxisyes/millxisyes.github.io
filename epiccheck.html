@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Soundmap Epic Tracker</title>
+  <title>Soundmap Epic Tracker (Shared)</title>
   <style>
     body {
       font-family: sans-serif;
@@ -44,7 +44,7 @@
   </style>
 </head>
 <body>
-  <h1>🎵 Soundmap Epic Tracker</h1>
+  <h1>🎵 Shared Soundmap Epic Tracker</h1>
   <button onclick="markEpicChecked()">Epic Checked</button>
   <button onclick="markEpicFound()">Epic Found</button>
 
@@ -52,15 +52,51 @@
   <div class="stats" id="stats"></div>
 
   <script>
-    let logs = JSON.parse(localStorage.getItem('epicLogs') || '[]');
+    const BIN_ID = "67f053e18a456b796682a8c2";
+    const ACCESS_KEY = "$2a$10$8cKgjXkgaP.BWk70Gs00feVPZ1axrhDuNQFpzO8d63kGTy9wEYID2";
+    const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+    let logs = [];
     let lastCheckTime = null;
+
+    async function fetchLogs() {
+      try {
+        const res = await fetch(API_URL + "/latest", {
+          headers: {
+            "X-Access-Key": ACCESS_KEY
+          }
+        });
+        const data = await res.json();
+        logs = data.record.logs || [];
+        renderLogs();
+      } catch (err) {
+        console.error("Fetch error:", err);
+        alert("Failed to load shared log.");
+      }
+    }
+
+    async function updateLogs() {
+      try {
+        await fetch(API_URL, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Access-Key": ACCESS_KEY
+          },
+          body: JSON.stringify({ logs })
+        });
+      } catch (err) {
+        console.error("Update error:", err);
+        alert("Failed to update shared log.");
+      }
+    }
 
     function markEpicChecked() {
       lastCheckTime = new Date();
       alert('Epic check logged at ' + lastCheckTime.toLocaleString());
     }
 
-    function markEpicFound() {
+    async function markEpicFound() {
       if (!lastCheckTime) {
         alert("You need to log an epic check first!");
         return;
@@ -76,7 +112,7 @@
       };
 
       logs.push(entry);
-      localStorage.setItem('epicLogs', JSON.stringify(logs));
+      await updateLogs();
       lastCheckTime = null;
       renderLogs();
     }
@@ -105,7 +141,7 @@
       `;
     }
 
-    renderLogs();
+    fetchLogs();
   </script>
 </body>
 </html>
