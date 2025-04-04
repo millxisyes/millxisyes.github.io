@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Soundmap Epic Tracker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 1rem 2rem;
+      margin: 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #1db954;
+      color: white;
+    }
+    button:hover {
+      background-color: #1ed760;
+    }
+    .log {
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 600px;
+    }
+    .entry {
+      border-bottom: 1px solid #333;
+      padding: 0.5rem 0;
+    }
+    .stats {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎵 Soundmap Epic Tracker</h1>
+  <button onclick="markEpicChecked()">Epic Checked</button>
+  <button onclick="markEpicFound()">Epic Found</button>
+
+  <div class="log" id="log"></div>
+  <div class="stats" id="stats"></div>
+
+  <script>
+    let logs = JSON.parse(localStorage.getItem('epicLogs') || '[]');
+    let lastCheckTime = null;
+
+    function markEpicChecked() {
+      lastCheckTime = new Date();
+      alert('Epic check logged at ' + lastCheckTime.toLocaleString());
+    }
+
+    function markEpicFound() {
+      if (!lastCheckTime) {
+        alert("You need to log an epic check first!");
+        return;
+      }
+      const foundTime = new Date();
+      const diffMs = foundTime - lastCheckTime;
+      const diffMin = Math.round(diffMs / 60000);
+
+      const entry = {
+        check: lastCheckTime.toISOString(),
+        found: foundTime.toISOString(),
+        diffMinutes: diffMin
+      };
+
+      logs.push(entry);
+      localStorage.setItem('epicLogs', JSON.stringify(logs));
+      lastCheckTime = null;
+      renderLogs();
+    }
+
+    function renderLogs() {
+      const logDiv = document.getElementById('log');
+      logDiv.innerHTML = '<h2>Log</h2>';
+      logs.slice().reverse().forEach(entry => {
+        logDiv.innerHTML += `
+          <div class="entry">
+            <strong>Check:</strong> ${new Date(entry.check).toLocaleString()}<br>
+            <strong>Found:</strong> ${new Date(entry.found).toLocaleString()}<br>
+            <strong>Time Between:</strong> ${entry.diffMinutes} minutes
+          </div>
+        `;
+      });
+
+      const avg = logs.length
+        ? Math.round(logs.reduce((a, b) => a + b.diffMinutes, 0) / logs.length)
+        : 0;
+
+      document.getElementById('stats').innerHTML = `
+        <h2>Stats</h2>
+        <p>Total Sessions: ${logs.length}</p>
+        <p>Average Time Between Check & Epic: ${avg} minutes</p>
+      `;
+    }
+
+    renderLogs();
+  </script>
+</body>
+</html>
