@@ -57,7 +57,7 @@
     const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
     let logs = [];
-    let lastCheckTime = null;
+    let lastCheckTime = localStorage.getItem('lastCheckTime') ? new Date(localStorage.getItem('lastCheckTime')) : null;
 
     async function fetchLogs() {
       try {
@@ -97,6 +97,7 @@
 
     function markEpicChecked() {
       lastCheckTime = new Date();
+      localStorage.setItem('lastCheckTime', lastCheckTime.toISOString());  // Store the check time in local storage
       alert('✅ Epic check logged at ' + lastCheckTime.toLocaleString());
     }
 
@@ -117,7 +118,8 @@
 
       logs.push(entry);
       await updateLogs();
-      lastCheckTime = null;
+      lastCheckTime = null;  // Clear the stored check time after it's used
+      localStorage.removeItem('lastCheckTime');  // Remove it from local storage
       renderLogs();
     }
 
