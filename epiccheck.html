@@ -57,7 +57,7 @@
     const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
     let logs = [];
-    let lastCheckTime = localStorage.getItem('lastCheckTime') ? new Date(localStorage.getItem('lastCheckTime')) : null;
+    let lastCheckTime = null; // We'll store this in the shared JSONBin
 
     async function fetchLogs() {
       try {
@@ -67,11 +67,8 @@
           }
         });
         const data = await res.json();
-        if (data.record && data.record.logs) {
-          logs = data.record.logs;
-        } else {
-          logs = [];
-        }
+        logs = data.record.logs || [];
+        lastCheckTime = data.record.lastCheckTime || null; // Load the last check time from the shared tracker
         renderLogs();
       } catch (err) {
         console.error("Fetch error:", err);
@@ -87,7 +84,10 @@
             "Content-Type": "application/json",
             "X-Access-Key": ACCESS_KEY
           },
-          body: JSON.stringify({ logs })
+          body: JSON.stringify({ 
+            logs,
+            lastCheckTime // Save the last check time in the shared log
+          })
         });
       } catch (err) {
         console.error("Update error:", err);
@@ -97,8 +97,8 @@
 
     function markEpicChecked() {
       lastCheckTime = new Date();
-      localStorage.setItem('lastCheckTime', lastCheckTime.toISOString());  // Store the check time in local storage
       alert('✅ Epic check logged at ' + lastCheckTime.toLocaleString());
+      updateLogs(); // Save to the shared tracker immediately
     }
 
     async function markEpicFound() {
@@ -118,15 +118,13 @@
 
       logs.push(entry);
       await updateLogs();
-      lastCheckTime = null;  // Clear the stored check time after it's used
-      localStorage.removeItem('lastCheckTime');  // Remove it from local storage
+      lastCheckTime = null;  // Clear the check time after logging
       renderLogs();
     }
 
     function renderLogs() {
       const logDiv = document.getElementById('log');
       logDiv.innerHTML = '<h2>Log</h2>';
-      
       if (logs.length === 0) {
         logDiv.innerHTML += '<p>No logs yet.</p>';
       } else {
