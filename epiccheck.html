@@ -41,6 +41,10 @@
     .stats {
       margin-top: 2rem;
     }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -71,7 +75,9 @@
         renderLogs();
       } catch (err) {
         console.error("Fetch error:", err);
-        document.getElementById('log').innerHTML = '<p style="color: red">⚠️ Failed to load shared log. Please try again later.</p>';
+        const logDiv = document.getElementById('log');
+        logDiv.innerHTML = '<p class="error">⚠️ Failed to load shared log. Please try again later.</p>';
+        document.getElementById('stats').innerHTML = '';
       }
     }
 
@@ -119,6 +125,12 @@
 
     function renderLogs() {
       const logDiv = document.getElementById('log');
+      if (logs.length === 0) {
+        logDiv.innerHTML = '<p>No logs yet.</p>';
+        document.getElementById('stats').innerHTML = '';
+        return;
+      }
+
       logDiv.innerHTML = '<h2>Log</h2>';
       logs.slice().reverse().forEach(entry => {
         logDiv.innerHTML += `
