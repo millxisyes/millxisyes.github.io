@@ -41,10 +41,6 @@
     .stats {
       margin-top: 2rem;
     }
-    .error {
-      color: red;
-      font-weight: bold;
-    }
   </style>
 </head>
 <body>
@@ -71,13 +67,15 @@
           }
         });
         const data = await res.json();
-        logs = data.record.logs || [];
+        if (data.record && data.record.logs) {
+          logs = data.record.logs;
+        } else {
+          logs = [];
+        }
         renderLogs();
       } catch (err) {
         console.error("Fetch error:", err);
-        const logDiv = document.getElementById('log');
-        logDiv.innerHTML = '<p class="error">⚠️ Failed to load shared log. Please try again later.</p>';
-        document.getElementById('stats').innerHTML = '';
+        document.getElementById('log').innerHTML = '<p style="color: red">⚠️ Failed to load shared log. Please try again later.</p>';
       }
     }
 
@@ -125,22 +123,21 @@
 
     function renderLogs() {
       const logDiv = document.getElementById('log');
-      if (logs.length === 0) {
-        logDiv.innerHTML = '<p>No logs yet.</p>';
-        document.getElementById('stats').innerHTML = '';
-        return;
-      }
-
       logDiv.innerHTML = '<h2>Log</h2>';
-      logs.slice().reverse().forEach(entry => {
-        logDiv.innerHTML += `
-          <div class="entry">
-            <strong>Check:</strong> ${new Date(entry.check).toLocaleString()}<br>
-            <strong>Found:</strong> ${new Date(entry.found).toLocaleString()}<br>
-            <strong>Time Between:</strong> ${entry.diffMinutes} minutes
-          </div>
-        `;
-      });
+      
+      if (logs.length === 0) {
+        logDiv.innerHTML += '<p>No logs yet.</p>';
+      } else {
+        logs.slice().reverse().forEach(entry => {
+          logDiv.innerHTML += `
+            <div class="entry">
+              <strong>Check:</strong> ${new Date(entry.check).toLocaleString()}<br>
+              <strong>Found:</strong> ${new Date(entry.found).toLocaleString()}<br>
+              <strong>Time Between:</strong> ${entry.diffMinutes} minutes
+            </div>
+          `;
+        });
+      }
 
       const avg = logs.length
         ? Math.round(logs.reduce((a, b) => a + b.diffMinutes, 0) / logs.length)
