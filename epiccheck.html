@@ -52,12 +52,12 @@
   <div class="stats" id="stats"></div>
 
   <script>
-    const BIN_ID = "67f053e18a456b796682a8c2";
-    const ACCESS_KEY = "$2a$10$8cKgjXkgaP.BWk70Gs00feVPZ1axrhDuNQFpzO8d63kGTy9wEYID2";
+    const BIN_ID = "67f056ed8960c979a57e6f76"; // Update bin ID here
+    const ACCESS_KEY = "$2a$10$tZ./MSWdmsKf5tqqxOnYEOgiqjVGXVC7A9PmQWGF1.rYBiVqkmWW2"; // Update access key here
     const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
     let logs = [];
-    let lastCheckTime = null; // We'll store this in the shared JSONBin
+    let lastCheckTime = null;
 
     async function fetchLogs() {
       try {
@@ -68,7 +68,6 @@
         });
         const data = await res.json();
         logs = data.record.logs || [];
-        lastCheckTime = data.record.lastCheckTime || null; // Load the last check time from the shared tracker
         renderLogs();
       } catch (err) {
         console.error("Fetch error:", err);
@@ -84,10 +83,7 @@
             "Content-Type": "application/json",
             "X-Access-Key": ACCESS_KEY
           },
-          body: JSON.stringify({ 
-            logs,
-            lastCheckTime // Save the last check time in the shared log
-          })
+          body: JSON.stringify({ logs })
         });
       } catch (err) {
         console.error("Update error:", err);
@@ -98,7 +94,6 @@
     function markEpicChecked() {
       lastCheckTime = new Date();
       alert('✅ Epic check logged at ' + lastCheckTime.toLocaleString());
-      updateLogs(); // Save to the shared tracker immediately
     }
 
     async function markEpicFound() {
@@ -118,26 +113,22 @@
 
       logs.push(entry);
       await updateLogs();
-      lastCheckTime = null;  // Clear the check time after logging
+      lastCheckTime = null;
       renderLogs();
     }
 
     function renderLogs() {
       const logDiv = document.getElementById('log');
       logDiv.innerHTML = '<h2>Log</h2>';
-      if (logs.length === 0) {
-        logDiv.innerHTML += '<p>No logs yet.</p>';
-      } else {
-        logs.slice().reverse().forEach(entry => {
-          logDiv.innerHTML += `
-            <div class="entry">
-              <strong>Check:</strong> ${new Date(entry.check).toLocaleString()}<br>
-              <strong>Found:</strong> ${new Date(entry.found).toLocaleString()}<br>
-              <strong>Time Between:</strong> ${entry.diffMinutes} minutes
-            </div>
-          `;
-        });
-      }
+      logs.slice().reverse().forEach(entry => {
+        logDiv.innerHTML += `
+          <div class="entry">
+            <strong>Check:</strong> ${new Date(entry.check).toLocaleString()}<br>
+            <strong>Found:</strong> ${new Date(entry.found).toLocaleString()}<br>
+            <strong>Time Between:</strong> ${entry.diffMinutes} minutes
+          </div>
+        `;
+      });
 
       const avg = logs.length
         ? Math.round(logs.reduce((a, b) => a + b.diffMinutes, 0) / logs.length)
